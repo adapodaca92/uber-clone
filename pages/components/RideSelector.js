@@ -1,10 +1,16 @@
 import React from "react";
 import tw from "tailwind-styled-components";
 import { carList } from "../data/carList";
+import Link from "next/link";
 
 const RideSelector = () => {
   return (
     <Wrapper>
+      <Link href="/search">
+        <ButtonContainer>
+          <BackButton src="https://img.icons8.com/ios-filled/50/000000/left.png" />
+        </ButtonContainer>
+      </Link>
       <Title>Choose a ride, or swipe up for more</Title>
       <CarList>
         {carList.map((car, index) => (
@@ -23,6 +29,14 @@ const RideSelector = () => {
 };
 
 export default RideSelector;
+
+const ButtonContainer = tw.div`
+fixed top-4 left-4 z-50 bg-white rounded-full
+`;
+
+const BackButton = tw.img`
+
+`;
 
 const CarDetails = tw.div`
 flex-1
