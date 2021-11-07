@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
-import { carList } from "../data/carList";
+import { carList } from "../../data/carList";
 import Link from "next/link";
 
-const RideSelector = () => {
+const RideSelector = (pickupCoordinates, dropoffCoordinates) => {
+  const [rideDuration, setRideDuration] = (useState = 0);
+
+  //get ride duration from mapbox api
+  useEffect(() => {
+    rideDuration = fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]},${pickupCoordinates[1]},${dropoffCoordinates[0]},${dropoffCoordinates[1]}?access_token=pk.eyJ1IjoiZHJha29zaSIsImEiOiJja2x1YW9jdWswOHcyMnVvZXQ1aTVqcHBnIn0.G0SLu_zwAEU9_q8FIkHeaQ`
+    )
+      .then((res) => res.json())
+      .then((data) => setRideDuration(data.routes[0].duration / 100));
+  }, [pickupCoordinates, dropoffCoordinates]);
+
   return (
     <Wrapper>
       <Link href="/search">
@@ -20,7 +31,7 @@ const RideSelector = () => {
               <Service>{car.service}</Service>
               <Time>5 mins away</Time>
             </CarDetails>
-            <Price>$24.00</Price>
+            <Price>{"$" + rideDuration * car.multiplier.toFixed(2)}</Price>
           </Car>
         ))}
       </CarList>
@@ -31,11 +42,11 @@ const RideSelector = () => {
 export default RideSelector;
 
 const ButtonContainer = tw.div`
-fixed top-4 left-4 z-50 bg-white rounded-full
+fixed top-4 left-4 z-50 bg-white rounded-full 
 `;
 
 const BackButton = tw.img`
-
+cursor-pointer
 `;
 
 const CarDetails = tw.div`

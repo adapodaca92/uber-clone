@@ -4,8 +4,28 @@ import styles from "../styles/Home.module.css";
 import tw from "tailwind-styled-components";
 import Map from "./components/Map";
 import Link from "next/link";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signOut, singOut } from "@firebase/auth";
+import { useRouter } from "next.router";
+import router from "next/router";
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          name: user.displayName,
+          photoUrl: user.photoURL,
+        });
+      } else {
+        setUser(null);
+        router.push("/login");
+      }
+    });
+  }, []);
+
   return (
     <Wrapper>
       <Map />
@@ -13,8 +33,11 @@ export default function Home() {
         <Header>
           <UberLogo src="https://i.ibb.co/84stgjq/uber-technologies-new-20218114.jpg" />
           <Profile>
-            <Name>Anthony Apodaca</Name>
-            <UserImage src="./images/profile.jpg" />
+            <Name>{user && user.name}</Name>
+            <UserImage
+              src={user && user.photoURL}
+              onClick={() => signOut(auth)}
+            />
           </Profile>
         </Header>
         <ActionButtons>
@@ -64,7 +87,7 @@ const Name = tw.div`
 `;
 
 const UserImage = tw.div`
- h-12 w-12 rounded-full border border-gray-200 p-px
+ h-12 w-12 rounded-full border border-gray-200 p-px cursor-pointer
 `;
 
 const ActionButtons = tw.div`
