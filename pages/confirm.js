@@ -53,7 +53,10 @@ const Confirm = () => {
         dropoffCoordinates={dropoffCoordinates}
       />
       <RideContainer>
-        <RideSelector />
+        <RideSelector
+          pickupCoordinates={pickupCoordinates}
+          dropoffCoordinates={dropoffCoordinates}
+        />
         <ConfirmButtonContainer>
           <ConfirmButton>Confirm UberX</ConfirmButton>
         </ConfirmButtonContainer>

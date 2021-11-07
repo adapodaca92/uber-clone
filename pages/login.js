@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import tw from "tailwind-styled-components";
 import router, { useRouter } from "next/router";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { auth, provider } from "../firebase";
+import { auth, provider } from "./firebase";
 
 const Login = () => {
   const rotuer = useRouter();

@@ -3,16 +3,27 @@ import tw from "tailwind-styled-components";
 import { carList } from "../../data/carList";
 import Link from "next/link";
 
-const RideSelector = (pickupCoordinates, dropoffCoordinates) => {
-  const [rideDuration, setRideDuration] = (useState = 0);
+const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
+  const [rideDuration, setRideDuration] = useState(0);
 
   //get ride duration from mapbox api
   useEffect(() => {
-    rideDuration = fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]},${pickupCoordinates[1]},${dropoffCoordinates[0]},${dropoffCoordinates[1]}?access_token=pk.eyJ1IjoiZHJha29zaSIsImEiOiJja2x1YW9jdWswOHcyMnVvZXQ1aTVqcHBnIn0.G0SLu_zwAEU9_q8FIkHeaQ`
+    console.log(pickupCoordinates);
+    console.log(dropoffCoordinates);
+    fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]}, ${pickupCoordinates[1]};${dropoffCoordinates[0]}, ${dropoffCoordinates[1]}?access_token=pk.eyJ1IjoiZHJha29zaSIsImEiOiJja2x1YW9jdWswOHcyMnVvZXQ1aTVqcHBnIn0.G0SLu_zwAEU9_q8FIkHeaQ`
     )
       .then((res) => res.json())
-      .then((data) => setRideDuration(data.routes[0].duration / 100));
+      .then((data) => {
+        if (data.routes.length > 0) {
+          setRideDuration(data.routes[0].duration / 100);
+        } else {
+          setRideDuration(0);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }, [pickupCoordinates, dropoffCoordinates]);
 
   return (
@@ -31,7 +42,7 @@ const RideSelector = (pickupCoordinates, dropoffCoordinates) => {
               <Service>{car.service}</Service>
               <Time>5 mins away</Time>
             </CarDetails>
-            <Price>{"$" + rideDuration * car.multiplier.toFixed(2)}</Price>
+            <Price>{"$" + (rideDuration * car.multiplier).toFixed(2)}</Price>
           </Car>
         ))}
       </CarList>

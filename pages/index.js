@@ -4,9 +4,10 @@ import styles from "../styles/Home.module.css";
 import tw from "tailwind-styled-components";
 import Map from "./components/Map";
 import Link from "next/link";
-import { auth } from "../firebase";
+import { useState, useEffect } from "react";
+import { auth } from "./firebase";
 import { onAuthStateChanged, signOut, singOut } from "@firebase/auth";
-import { useRouter } from "next.router";
+import { useRouter } from "next/router";
 import router from "next/router";
 
 export default function Home() {
@@ -35,7 +36,7 @@ export default function Home() {
           <Profile>
             <Name>{user && user.name}</Name>
             <UserImage
-              src={user && user.photoURL}
+              src={user && user.photoUrl}
               onClick={() => signOut(auth)}
             />
           </Profile>
@@ -86,7 +87,7 @@ const Name = tw.div`
  mr-4 w-20 text-sm
 `;
 
-const UserImage = tw.div`
+const UserImage = tw.img`
  h-12 w-12 rounded-full border border-gray-200 p-px cursor-pointer
 `;
 
